@@ -10,7 +10,7 @@ Here I will explain a process about how you can setup a basic Codepipeline flow 
 ## What will we build  
 
 In this example we will setup a pipeline to build and deploy a NodeJS app. The app itself is a simple NodeJS app using Express. The app provides an interface to add products to a MongoDB database and then display the list of products by reading the products from the database.All the dependencies are defined in the package.json file.  
-<an image of the app>  
+![Application Look](images/main_app_page.png) 
 
 Below is the flow which I will be walking through in this post. Lets get to know each phase or step of the flow.Below I will provide a brief explanation of each phase involved and various files /scripts involved in each phase.  
 
@@ -28,20 +28,20 @@ In my example I have skipped the testing step but it is always a good practice, 
 - Uploads the files as artifat to a specified S3 bucket  
 
 ### CodeDeploy  
-In this phase we will deploy the artifact that was produced by the Codebuild phase, to production.In a proper release pipeline, there can be multiple Code Deploy phases which can handle multiple deployments like deploying to a Test environment for testing, Deploy to stage environment for testing etc.Regardless how many deployment phases you need, the basic steps remain same which I will be going thorugh here.  
+In this phase we will deploy the artifact that was produced by the Codebuild phase, to production.In a proper release pipeline, there can be multiple Code Deploy phases which can handle multiple deployments like deploying to a Test environment for testing, Deploy to stage environment for testing etc.Regardless how many deployment phases you need, the basic steps remain same which I will be going through here.  
 
 The definition of the deployment is specified in multiple files and scripts. Let me go through each of them briefly:  
 - appspec.yml: This file controls the overall steps the deployment will perform on the server. A series of steps define what files will be deployed and what scripts will be ran on the server to complete the deployment.We define the below sections to control how and what is deployed:  
 1. <em>files: </em>Defines what file is deployed from the input artifact and to what folder on the destination server.  
 2. <em>BeforeInstall: </em>In this step we install any dependencies which are needed by our app to run on the server.Here we define the name of the script which will be executed on the server to install the dependencies.In this example we are installing Nodejs and npm on the server to run our nodeJS app.  
-3. <em>AfterInstall: <em>Here we can run any other scripts or commands on the server which are pre-requisites for the final app to run.In our example we are executing npm install command to install the NodeJS packages defined in the package.json of the application.  
-4. <em>ApplicationStart: <em>This is the final step where we run the script to start up the application.The script and commands will differ based on what application you are starting.Here we run the npm command to start up the express server in the NodeJS app.This depicts the final step of the deployment once application starts successfully.  
+3. <em>AfterInstall: </em>Here we can run any other scripts or commands on the server which are pre-requisites for the final app to run.In our example we are executing npm install command to install the NodeJS packages defined in the package.json of the application.  
+4. <em>ApplicationStart: </em>This is the final step where we run the script to start up the application.The script and commands will differ based on what application you are starting.Here we run the npm command to start up the express server in the NodeJS app.This depicts the final step of the deployment once application starts successfully.  
 
 In this example we are deploying the application to an Auto scaling group which consists of multiple EC2 instances.So the final target of the deployment is specified as the Auto scaling group. The deployment scripts are executed on each of the instance from the auto scaling group.  
 
 
 ## Walkthrough of the Setup  
-Let us go through the steps to setup and run the pipeline.While goigh through the steps, for some of the parts I will not go into much detail as they are full topics in themselves.I will point to needed documentation to help through the steps if you are still new to AWS.  
+Let us go through the steps to setup and run the pipeline.While going through the steps, for some of the parts I will not go into much detail as they are full topics in themselves.I will point to needed documentation to help through the steps if you are still new to AWS.  
 
 ### Intial Preparations:  
 - <em>AWS Account: </em>Of course we will need an AWS account. Go ahead and register for a free tier account on AWS  
