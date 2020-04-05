@@ -1,0 +1,21 @@
+const express=require('express')
+require('../src/model/db')
+const ejs=require('ejs')
+const path=require('path')
+const bodyParser=require('body-parser')
+const port=process.env.PORT||3000
+const app=express()
+const publicPath=path.join(__dirname,'../public')
+const prodRouter=require('../src/routes/products')
+const userRouter=require('../src/routes/users')
+console.log(publicPath)
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(express.json())
+app.use(express.static(publicPath))
+app.set('view engine','ejs')
+app.use(prodRouter)
+app.use(userRouter)
+
+app.listen(port,()=>{
+    console.log(`Server Started at ${port}`)
+})

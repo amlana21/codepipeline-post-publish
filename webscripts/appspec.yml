@@ -1,0 +1,29 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /nodeapp
+
+permissions:
+- object: /
+  pattern: "**"
+  owner: ubuntu
+  group: ubuntu
+hooks:
+  BeforeInstall:
+    - location: scripts/install_dependencies
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: scripts/npm-install.sh
+      runas: root
+      timeout: 300
+  ApplicationStart:
+    - location: scripts/npm-start.sh
+      timeout: 60
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_server
+      timeout: 300
+      runas: root
+
